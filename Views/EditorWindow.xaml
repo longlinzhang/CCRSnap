@@ -20,8 +20,13 @@
                           Click="OnToolSelected" Tag="Arrow" Margin="2"/>
             <ToggleButton x:Name="BtnText" Content="文字" ToolTip="文字"
                           Click="OnToolSelected" Tag="Text" Margin="2"/>
-            <ToggleButton x:Name="BtnMosaic" Content="马赛克" ToolTip="马赛克"
-                          Click="OnToolSelected" Tag="Mosaic" Margin="2"/>
+           <ToggleButton x:Name="BtnMosaic" Content="马赛克" ToolTip="马赛克"
+                         Click="OnToolSelected" Tag="Mosaic" Margin="2"/>
+            <Separator/>
+            <Button x:Name="BtnOCR" Content="OCR" Click="OnOCR" Margin="2"
+                    ToolTip="文字识别 (识别选中区域文字)"/>
+            <Button x:Name="BtnTranslate" Content="翻译" Click="OnTranslate" Margin="2"
+                    ToolTip="翻译 (翻译已识别的文字)"/>
             <Separator/>
             <Button x:Name="BtnUndo" Content="撤销" Click="OnUndo" Margin="2"/>
             <Separator/>

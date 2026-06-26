@@ -45,6 +45,9 @@ public partial class EditorWindow : Window
     {
         UpdateImageDisplay();
         OverlayCanvas.Visibility = Visibility.Visible;
+        OverlayCanvas.MouseDown += OverlayCanvas_MouseDown;
+        OverlayCanvas.MouseMove += OverlayCanvas_MouseMove;
+        OverlayCanvas.MouseUp += OverlayCanvas_MouseUp;
     }
     private void UpdateImageDisplay()
     {
@@ -434,4 +437,45 @@ private void OverlayCanvas_MouseMove(object sender, System.Windows.Input.MouseEv
         base.OnClosed(e);
     }
     #endregion
+    private async void OnOCR(object sender, RoutedEventArgs e)
+    {
+        var s = _settingsService.Settings;
+        if (string.IsNullOrEmpty(s.YoudaoAppKey))
+        {
+            System.Windows.MessageBox.Show("请先在主窗口设置中配置有道云 API Key 和 Secret（注册: https://ai.youdao.com）", "OCR 配置");
+            return;
+        }
+        StatusItem.Content = "OCR 识别中...";
+        try
+        {
+            var ocr = new Services.OcrService();
+            var text = await ocr.RecognizeTextAsync(_workingBitmap, s.YoudaoAppKey, s.YoudaoAppSecret);
+            StatusItem.Content = "OCR: " + (text.Length > 60 ? text[..60] + "..." : text);
+            System.Windows.MessageBox.Show(text, "OCR 识别结果");
+        }
+        catch (Exception ex) { System.Windows.MessageBox.Show($"OCR 失败: {ex.Message}", "错误"); }
+    }
+
+    private async void OnTranslate(object sender, RoutedEventArgs e)
+    {
+        var s = _settingsService.Settings;
+        if (string.IsNullOrEmpty(s.YoudaoAppKey))
+        {
+            System.Windows.MessageBox.Show("请先配置有道云 API", "翻译配置");
+            return;
+        }
+        StatusItem.Content = "翻译中...";
+        try
+        {
+            var ocr = new Services.OcrService();
+            var tms = new Services.TranslationService();
+            var text = await ocr.RecognizeTextAsync(_workingBitmap, s.YoudaoAppKey, s.YoudaoAppSecret);
+            if (string.IsNullOrEmpty(text) || text.Contains("请先"))
+            { System.Windows.MessageBox.Show(text == "" ? "无法识别文字" : text, "提示"); return; }
+            var translated = await tms.TranslateAsync(text, s.YoudaoAppKey, s.YoudaoAppSecret);
+            StatusItem.Content = "翻译: " + (translated.Length > 60 ? translated[..60] + "..." : translated);
+            System.Windows.MessageBox.Show($"原文:\n{text}\n\n翻译:\n{translated}", "翻译结果");
+        }
+        catch (Exception ex) { System.Windows.MessageBox.Show($"翻译失败: {ex.Message}", "错误"); }
+    }
 }

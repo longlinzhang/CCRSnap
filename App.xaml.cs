@@ -53,6 +53,8 @@ public partial class App : System.Windows.Application
                 services.AddSingleton<IFileStorageService, FileStorageService>();
                 services.AddSingleton<IImageDiffService, ImageDiffService>();
                 services.AddSingleton<IWeComPushService, WeComPushService>();
+                services.AddSingleton<IOcrService, OcrService>();
+                services.AddSingleton<ITranslationService, TranslationService>();
                 services.AddSingleton<MainViewModel>();
                 services.AddSingleton<MainWindow>();
             })
