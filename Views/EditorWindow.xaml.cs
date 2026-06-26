@@ -164,6 +164,12 @@ private void OverlayCanvas_MouseMove(object sender, System.Windows.Input.MouseEv
             return;
         }
         var finalShape = CreateShape(_drawStart, end, false);
+        var shapeRect = GetRect(_drawStart, end);
+        if (finalShape is System.Windows.Shapes.Rectangle || finalShape is System.Windows.Shapes.Ellipse)
+        {
+            Canvas.SetLeft(finalShape, shapeRect.X);
+            Canvas.SetTop(finalShape, shapeRect.Y);
+        }
         if (finalShape != null)
         {
             SaveUndoState();
@@ -277,8 +283,8 @@ private void OverlayCanvas_MouseMove(object sender, System.Windows.Input.MouseEv
         {
             for (int bx = x; bx < x + w; bx += blockSize)
             {
-                int bw = Math.Min(blockSize, y + h - by);
-                int bh = Math.Min(blockSize, x + w - bx);
+            int bw = Math.Min(blockSize, x + w - bx);
+            int bh = Math.Min(blockSize, y + h - by);
                 var avg = GetAverageColor(_workingBitmap, bx, by, bw, bh);
                 using var brush = new SolidBrush(avg);
                 g.FillRectangle(brush, bx, by, bw, bh);
@@ -442,7 +448,7 @@ private void OverlayCanvas_MouseMove(object sender, System.Windows.Input.MouseEv
         var s = _settingsService.Settings;
         if (string.IsNullOrEmpty(s.DeepSeekApiKey))
         {
-            System.Windows.MessageBox.Show("请先在主窗口设置中配置有道云 API Key 和 Secret（注册: https://ai.youdao.com）", "OCR 配置");
+            System.Windows.MessageBox.Show("请先在主窗口设置中配置DeepSeek API Key（获取: https://platform.deepseek.com）", "OCR 配置");
             return;
         }
         StatusItem.Content = "OCR 识别中...";
@@ -461,7 +467,7 @@ private void OverlayCanvas_MouseMove(object sender, System.Windows.Input.MouseEv
         var s = _settingsService.Settings;
         if (string.IsNullOrEmpty(s.DeepSeekApiKey))
         {
-            System.Windows.MessageBox.Show("请先配置有道云 API", "翻译配置");
+            System.Windows.MessageBox.Show("请先配置 DeepSeek API Key", "翻译配置");
             return;
         }
         StatusItem.Content = "翻译中...";
