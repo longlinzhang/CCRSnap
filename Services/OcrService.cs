@@ -35,11 +35,7 @@ public class OcrService : IOcrService
                 new
                 {
                     role = "user",
-                    content = new object[]
-                    {
-                        new { type = "text", text = "请识别图片中的所有文字，直接返回识别结果，不要附加任何说明" },
-                        new { type = "image_url", image_url = new { url = $"data:image/jpeg;base64,{b64}" } }
-                    }
+                    content = $"Extract ALL text from this Base64 JPEG image. Return ONLY the recognized text, nothing else:\n\n{b64}"
                 }
             },
             max_tokens = 2048
