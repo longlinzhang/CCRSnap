@@ -88,7 +88,11 @@ public class SchedulingService : ISchedulingService, IDisposable
                     return (60 - now.Minute) * 60000 - now.Second * 1000 - now.Millisecond;
 
             case ScheduleMode.Now:
-                return settings.IntervalSeconds * 1000.0;
+                int intSec = settings.IntervalSeconds;
+                int totalSec = now.Hour * 3600 + now.Minute * 60 + now.Second;
+                int mod = totalSec % intSec;
+                int delaySec = mod == 0 ? intSec : intSec - mod;
+                return delaySec * 1000 - now.Millisecond + 500;
 
             case ScheduleMode.SpecificTime:
                 if (TimeSpan.TryParse(settings.SpecificTime, out var target))

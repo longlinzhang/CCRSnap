@@ -88,7 +88,7 @@
                         <RadioButton Grid.Row="1" x:Name="RbtnTime" Content="指定时间"
                                      GroupName="Schedule" Checked="Schedule_Changed"/>
                         <StackPanel x:Name="TimePanel" Grid.Row="2" Orientation="Horizontal" Margin="20,0,0,0" Visibility="Collapsed">
-                            <Label Content="时间(HH:mm):" FontWeight="Normal"/>
+                            <Label x:Name="LabelTime" Content="时间(HH:mm):" FontWeight="Normal"/>
                             <TextBox x:Name="TbxTime" Text="08:00" Width="80"/>
                         </StackPanel>
                         <RadioButton Grid.Row="3" x:Name="RbtnHourly" Content="每小时"
@@ -100,7 +100,7 @@
 
                 <GroupBox Grid.Row="1" Grid.Column="0" x:Name="GbxInterval" Header="间隔设置">
                     <StackPanel Orientation="Horizontal">
-                        <Label Content="间隔(秒):" FontWeight="Normal"/>
+                        <Label x:Name="LabelInterval" Content="间隔(秒):" FontWeight="Normal"/>
                         <TextBox x:Name="TbxInterval" Text="30" Width="70"/>
                     </StackPanel>
                 </GroupBox>
@@ -110,7 +110,7 @@
                         <CheckBox x:Name="CbxScreenshot" Content="启用截图" IsChecked="True"/>
                         <CheckBox x:Name="CbxAutoDelete" Content="自动删除旧截图" IsChecked="True"/>
                         <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
-                            <Label Content="保留天数:" FontWeight="Normal"/>
+                            <Label x:Name="LabelDays" Content="保留天数:" FontWeight="Normal"/>
                             <TextBox x:Name="TbxDays" Text="30" Width="50"/>
                         </StackPanel>
                         <CheckBox x:Name="CbxHide" Content="隐藏保存文件夹"/>
@@ -127,7 +127,7 @@
                         </Grid.RowDefinitions>
                         <CheckBox Grid.Row="0" x:Name="CbxPushWecom" Content="推送截图到企微群"/>
                         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="20,0,0,0">
-                            <Label Content="Webhook:" FontWeight="Normal"/>
+                            <Label x:Name="LabelWebhook" Content="Webhook:" FontWeight="Normal"/>
                             <TextBox x:Name="TbxWebhook" Width="200"/>
                         </StackPanel>
                     </Grid>
@@ -146,7 +146,7 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Orientation="Horizontal">
-                            <Label Content="保存路径:" FontWeight="Normal"/>
+                            <Label x:Name="LabelSavePath" Content="保存路径:" FontWeight="Normal"/>
                             <TextBox x:Name="TbxPath" Width="180"/>
                             <Button x:Name="BtnBrowse" Content="浏览" Width="60"/>
                         </StackPanel>
@@ -155,15 +155,15 @@
                             <RadioButton x:Name="RbtnCombine" Content="合并保存" GroupName="CaptureMode"/>
                         </WrapPanel>
                         <StackPanel Grid.Row="2" Orientation="Horizontal">
-                            <Label Content="文件后缀:" FontWeight="Normal"/>
+                            <Label x:Name="LabelExtName" Content="文件后缀:" FontWeight="Normal"/>
                             <TextBox x:Name="TbxExtName" Text="jpg" Width="50"/>
                         </StackPanel>
                         <StackPanel Grid.Row="3" Orientation="Horizontal">
-                            <Label Content="文件前缀:" FontWeight="Normal"/>
+                            <Label x:Name="LabelPrefix" Content="文件前缀:" FontWeight="Normal"/>
                             <TextBox x:Name="TbxPrefix" Width="120"/>
                         </StackPanel>
                         <StackPanel Grid.Row="4" Orientation="Horizontal">
-                            <Label Content="JPEG质量:" FontWeight="Normal"/>
+                            <Label x:Name="LabelQuality" Content="JPEG质量:" FontWeight="Normal"/>
                             <TextBox x:Name="TbxQuality" Text="80" Width="50"/>
                         </StackPanel>
                         <GroupBox Grid.Row="5" x:Name="GbxFileFormat" Header="文件格式" FontWeight="Bold">
@@ -188,9 +188,9 @@
                         </Grid.RowDefinitions>
                         <CheckBox Grid.Row="0" x:Name="CbxDetect" Content="检测屏幕变化" Checked="Detect_Changed"/>
                         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="20,0,0,0">
-                            <Label Content="变化率阈值(%):" FontWeight="Normal"/>
+                            <Label x:Name="LabelDiffRatio" Content="变化率阈值(%):" FontWeight="Normal"/>
                             <TextBox x:Name="TbxDiffRatio" Text="10" Width="60"/>
-                            <Label Content="容差:" FontWeight="Normal"/>
+                            <Label x:Name="LabelTolerance" Content="容差:" FontWeight="Normal"/>
                             <TextBox x:Name="TbxTolerance" Text="10" Width="50"/>
                         </StackPanel>
                         <GroupBox Grid.Row="2" x:Name="GbxScreenIdx" Header="检测屏幕" FontWeight="Bold" Margin="20,4,4,4">
@@ -208,7 +208,7 @@
 
                 <GroupBox Grid.Row="2" Grid.Column="1" x:Name="GbxFixKey" Header="修复热键">
                     <StackPanel>
-                        <TextBlock Margin="4" FontWeight="Normal" TextWrapping="Wrap">
+                        <TextBlock x:Name="HotkeyHelpBlock" Margin="4" FontWeight="Normal" TextWrapping="Wrap">
                             如果热键无效，点击"修复热键"重新注册快捷键。
                             Alt+A = 手动截图, Ctrl+F12 = 显示/隐藏, Ctrl+` = 全屏保存
                         </TextBlock>

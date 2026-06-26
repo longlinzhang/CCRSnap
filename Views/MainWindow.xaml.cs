@@ -242,7 +242,24 @@ public partial class MainWindow : Window
     private void BtnSave_Click(object sender, RoutedEventArgs e)
     {
         CollectSettings();
-        StatusLeft.Content = "设置已保存";
+        // Apply startup registry setting
+        try
+        {
+            using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(
+                @"Software\Microsoft\Windows\CurrentVersion\Run", true);
+            if (key != null)
+            {
+                if (CbxLogin.IsChecked == true)
+                    key.SetValue("CCRSnap", $"\"{Environment.ProcessPath}\"");
+                else
+                    key.DeleteValue("CCRSnap", false);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Trace.WriteLine($"Startup reg error: {ex.Message}");
+        }
+        StatusLeft.Content = $"设置已保存 ({_settingsService.SettingsPath})";
     }
 
     private void BtnFixHK_Click(object sender, RoutedEventArgs e)
@@ -334,7 +351,21 @@ public partial class MainWindow : Window
             GbxDetectSet.Header = zh ? "差异检测设置" : "Change Detection";
             GbxScreenIdx.Header = zh ? "检测屏幕" : "Monitor";
             GbxFixKey.Header = zh ? "修复热键" : "HotKeys";
+            LabelSavePath.Content = zh ? "保存路径:" : "Save Path:";
+            BtnBrowse.Content = zh ? "浏览" : "Browse";
+            LabelExtName.Content = zh ? "文件后缀:" : "Suffix:";
+            LabelPrefix.Content = zh ? "文件前缀:" : "Prefix:";
+            LabelQuality.Content = zh ? "JPEG质量:" : "JPEG Quality:";
+            LabelInterval.Content = zh ? "间隔(秒):" : "Interval (sec):";
+            LabelDays.Content = zh ? "保留天数:" : "Keep Days:";
+            LabelDiffRatio.Content = zh ? "变化率阈值(%):" : "Change Rate (%):";
+            LabelTolerance.Content = zh ? "容差:" : "Tolerance:";
+            LabelTime.Content = zh ? "时间(HH:mm):" : "Time (HH:mm):";
+            LabelWebhook.Content = zh ? "Webhook:" : "Webhook:";
             StatusLeft.Content = zh ? "就绪" : "Ready";
+            HotkeyHelpBlock.Text = zh
+                ? "\u5982\u679c\u70ed\u952e\u65e0\u6548\uff0c\u70b9\u51fb\u201c\u4fee\u590d\u70ed\u952e\u201d\u91cd\u65b0\u6ce8\u518c\u5feb\u6377\u952e\u3002\nAlt+A = \u624b\u52a8\u622a\u56fe, Ctrl+F12 = \u663e\u793a/\u9690\u85cf, Ctrl+\u0060 = \u5168\u5c4f\u4fdd\u5b58"
+                : "If hotkeys don\'t work, click \u201cFix HotKeys\u201d to re-register.\nAlt+A = Capture, Ctrl+F12 = Show/Hide, Ctrl+\u0060 = Fullscreen Save";
             if (_trayIcon != null)
             {
                 _trayIcon.Text = zh ? "CCRSnap - 截图工具" : "CCRSnap - Screenshot Tool";

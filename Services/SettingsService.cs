@@ -24,10 +24,7 @@ public class SettingsService : ISettingsService
 
     public SettingsService()
     {
-        string appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        string dir = Path.Combine(appData, "CCRSnap");
-        Directory.CreateDirectory(dir);
-        SettingsPath = Path.Combine(dir, "settings.json");
+        SettingsPath = Path.Combine(AppContext.BaseDirectory, "settings.json");
         Load();
     }
 

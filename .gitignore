@@ -54,3 +54,6 @@ Desktop.ini
 publish/
 *.publish/
 bin/Release/
+
+# App settings
+settings.json
