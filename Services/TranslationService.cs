@@ -1,5 +1,5 @@
 using System.Net.Http;
-using System.Security.Cryptography;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -19,42 +19,32 @@ public class TranslationService : ITranslationService
     public async Task<string> TranslateAsync(string text, string? apiKey, string? apiSecret,
         string from = "auto", string to = "zh-CHS")
     {
-        if (string.IsNullOrWhiteSpace(text)) return "（无文字可翻译）";
-        if (string.IsNullOrEmpty(apiKey) || string.IsNullOrEmpty(apiSecret))
-            return "请先在设置中配置有道云 API Key 和 Secret";
+        if (string.IsNullOrEmpty(apiKey))
+            return "请先配置 DeepSeek API Key";
+        if (string.IsNullOrWhiteSpace(text))
+            return "";
 
-        var salt = Guid.NewGuid().ToString("N");
-        var curtime = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
-        var signStr = apiKey + text + salt + curtime + apiSecret;
-        var sign = ComputeHash(signStr, apiSecret);
-
-        var form = new Dictionary<string, string>
+        var payload = new
         {
-            ["q"] = text,
-            ["from"] = from,
-            ["to"] = to,
-            ["appKey"] = apiKey,
-            ["salt"] = salt,
-            ["sign"] = sign,
-            ["signType"] = "v3",
-            ["curtime"] = curtime
+            model = "deepseek-chat",
+            messages = new[]
+            {
+                new { role = "user", content = $"请将以下文本翻译成中文，直接返回翻译结果，不要附加任何说明：\n\n{text}" }
+            },
+            max_tokens = 4096
         };
 
-        var resp = await _http.PostAsync("https://openapi.youdao.com/api",
-            new FormUrlEncodedContent(form));
-        var json = await resp.Content.ReadAsStringAsync();
-        var doc = JsonDocument.Parse(json);
-        var errorCode = doc.RootElement.GetProperty("errorCode").GetInt32();
-        if (errorCode != 0)
-            return $"翻译失败 (错误码: {errorCode})";
-        var trans = doc.RootElement.GetProperty("translation")[0].GetString();
-        return trans ?? "（翻译结果为空）";
-    }
+        using var req = new HttpRequestMessage(HttpMethod.Post, "https://api.deepseek.com/v1/chat/completions");
+        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+        req.Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
 
-    private static string ComputeHash(string input, string key)
-    {
-        using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(key));
-        var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(input));
-        return BitConverter.ToString(hash).Replace("-", "").ToLower();
+        var resp = await _http.SendAsync(req);
+        var respJson = await resp.Content.ReadAsStringAsync();
+        var doc = JsonDocument.Parse(respJson);
+
+        if (doc.RootElement.TryGetProperty("error", out var err))
+            return $"API Error: {err.GetProperty("message").GetString()}";
+
+        return doc.RootElement.GetProperty("choices")[0].GetProperty("message").GetProperty("content").GetString() ?? "";
     }
 }

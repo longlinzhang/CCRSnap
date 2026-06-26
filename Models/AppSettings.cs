@@ -70,6 +70,5 @@ public class AppSettings
 
     // Language
     public string Language { get; set; } = "zh-CN";
-    public string? YoudaoAppKey { get; set; }
-    public string? YoudaoAppSecret { get; set; }
+    public string? DeepSeekApiKey { get; set; }
 }

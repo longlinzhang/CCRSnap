@@ -2,7 +2,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Net.Http;
-using System.Security.Cryptography;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -20,40 +20,42 @@ public class OcrService : IOcrService
 
     public async Task<string> RecognizeTextAsync(Bitmap bitmap, string? apiKey = null, string? apiSecret = null)
     {
-        if (!string.IsNullOrEmpty(apiKey) && !string.IsNullOrEmpty(apiSecret))
-        {
-            try { return await YoudaoOcrAsync(bitmap, apiKey, apiSecret); }
-            catch { }
-        }
-        return "请先在设置中配置有道云 API Key 和 Secret（注册: https://ai.youdao.com）";
-    }
+        if (string.IsNullOrEmpty(apiKey))
+            return "请先在设置中配置 DeepSeek API Key（获取: https://platform.deepseek.com/）";
 
-    private async Task<string> YoudaoOcrAsync(Bitmap bitmap, string appKey, string appSecret)
-    {
         using var ms = new MemoryStream();
         bitmap.Save(ms, ImageFormat.Jpeg);
-        var imgBase64 = Convert.ToBase64String(ms.ToArray());
-        var salt = Guid.NewGuid().ToString("N");
-        var curtime = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
-        var signStr = appKey + salt + curtime + appSecret;
-        var sign = ComputeHash(signStr, appSecret);
-        var form = new Dictionary<string, string>
-        {
-            ["img"] = imgBase64, ["langType"] = "zh-CHS",
-            ["detectType"] = "10012", ["imageType"] = "1",
-            ["appKey"] = appKey, ["salt"] = salt,
-            ["sign"] = sign, ["signType"] = "v3", ["curtime"] = curtime
-        };
-        var resp = await _http.PostAsync("https://openapi.youdao.com/ocrapi", new FormUrlEncodedContent(form));
-        var json = await resp.Content.ReadAsStringAsync();
-        var doc = JsonDocument.Parse(json);
-        return doc.RootElement.GetProperty("Result").GetProperty("regions")[0].GetProperty("lines")[0].GetProperty("text").GetString() ?? "";
-    }
+        var b64 = Convert.ToBase64String(ms.ToArray());
 
-    private static string ComputeHash(string input, string key)
-    {
-        using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(key));
-        var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(input));
-        return BitConverter.ToString(hash).Replace("-", "").ToLower();
+        var payload = new
+        {
+            model = "deepseek-chat",
+            messages = new[]
+            {
+                new
+                {
+                    role = "user",
+                    content = new object[]
+                    {
+                        new { type = "text", text = "请识别图片中的所有文字，直接返回识别结果，不要附加任何说明" },
+                        new { type = "image_url", image_url = new { url = $"data:image/jpeg;base64,{b64}" } }
+                    }
+                }
+            },
+            max_tokens = 2048
+        };
+
+        using var req = new HttpRequestMessage(HttpMethod.Post, "https://api.deepseek.com/v1/chat/completions");
+        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+        req.Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+
+        var resp = await _http.SendAsync(req);
+        var respJson = await resp.Content.ReadAsStringAsync();
+        var doc = JsonDocument.Parse(respJson);
+
+        if (doc.RootElement.TryGetProperty("error", out var err))
+            return $"API Error: {err.GetProperty("message").GetString()}";
+
+        return doc.RootElement.GetProperty("choices")[0].GetProperty("message").GetProperty("content").GetString() ?? "";
     }
 }

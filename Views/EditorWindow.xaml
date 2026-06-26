@@ -50,7 +50,7 @@
                       VerticalScrollBarVisibility="Auto" Background="DimGray">
             <Grid>
                 <Image x:Name="DisplayImage" Stretch="None" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
-                <Canvas x:Name="OverlayCanvas" Visibility="Hidden"/>
+        <Canvas x:Name="OverlayCanvas" Visibility="Hidden" Background="Transparent"/>
             </Grid>
         </ScrollViewer>
 

@@ -440,7 +440,7 @@ private void OverlayCanvas_MouseMove(object sender, System.Windows.Input.MouseEv
     private async void OnOCR(object sender, RoutedEventArgs e)
     {
         var s = _settingsService.Settings;
-        if (string.IsNullOrEmpty(s.YoudaoAppKey))
+        if (string.IsNullOrEmpty(s.DeepSeekApiKey))
         {
             System.Windows.MessageBox.Show("请先在主窗口设置中配置有道云 API Key 和 Secret（注册: https://ai.youdao.com）", "OCR 配置");
             return;
@@ -449,7 +449,7 @@ private void OverlayCanvas_MouseMove(object sender, System.Windows.Input.MouseEv
         try
         {
             var ocr = new Services.OcrService();
-            var text = await ocr.RecognizeTextAsync(_workingBitmap, s.YoudaoAppKey, s.YoudaoAppSecret);
+            var text = await ocr.RecognizeTextAsync(_workingBitmap, s.DeepSeekApiKey);
             StatusItem.Content = "OCR: " + (text.Length > 60 ? text[..60] + "..." : text);
             System.Windows.MessageBox.Show(text, "OCR 识别结果");
         }
@@ -459,7 +459,7 @@ private void OverlayCanvas_MouseMove(object sender, System.Windows.Input.MouseEv
     private async void OnTranslate(object sender, RoutedEventArgs e)
     {
         var s = _settingsService.Settings;
-        if (string.IsNullOrEmpty(s.YoudaoAppKey))
+        if (string.IsNullOrEmpty(s.DeepSeekApiKey))
         {
             System.Windows.MessageBox.Show("请先配置有道云 API", "翻译配置");
             return;
@@ -469,10 +469,10 @@ private void OverlayCanvas_MouseMove(object sender, System.Windows.Input.MouseEv
         {
             var ocr = new Services.OcrService();
             var tms = new Services.TranslationService();
-            var text = await ocr.RecognizeTextAsync(_workingBitmap, s.YoudaoAppKey, s.YoudaoAppSecret);
+            var text = await ocr.RecognizeTextAsync(_workingBitmap, s.DeepSeekApiKey);
             if (string.IsNullOrEmpty(text) || text.Contains("请先"))
             { System.Windows.MessageBox.Show(text == "" ? "无法识别文字" : text, "提示"); return; }
-            var translated = await tms.TranslateAsync(text, s.YoudaoAppKey, s.YoudaoAppSecret);
+            var translated = await tms.TranslateAsync(text, s.DeepSeekApiKey, null);
             StatusItem.Content = "翻译: " + (translated.Length > 60 ? translated[..60] + "..." : translated);
             System.Windows.MessageBox.Show($"原文:\n{text}\n\n翻译:\n{translated}", "翻译结果");
         }
