@@ -2,9 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ctrl="clr-namespace:CCRSnap.Controls"
-        WindowStyle="None" AllowsTransparency="True"
-        Background="Transparent" Topmost="True"
-        WindowState="Maximized" ShowInTaskbar="False"
+        WindowStyle="None" AllowsTransparency="True" WindowState="Normal"
+        Background="Transparent" Topmost="True" ShowInTaskbar="False"
         Cursor="Cross">
     <Canvas x:Name="MainCanvas" Background="Transparent">
         <!-- Selection rectangle drawn programmatically -->
