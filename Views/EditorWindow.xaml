@@ -1,0 +1,57 @@
+<Window x:Class="CCRSnap.Views.EditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="截图编辑" Height="700" Width="950"
+        WindowStartupLocation="CenterScreen" Icon="/CCRSnap;component/TC.ico">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Toolbar -->
+        <ToolBar Grid.Row="0" x:Name="ToolBar">
+            <ToggleButton x:Name="BtnRectangle" Content="矩形" ToolTip="矩形"
+                          Click="OnToolSelected" Tag="Rectangle" Margin="2"/>
+            <ToggleButton x:Name="BtnEllipse" Content="椭圆" ToolTip="椭圆"
+                          Click="OnToolSelected" Tag="Ellipse" Margin="2"/>
+            <ToggleButton x:Name="BtnArrow" Content="箭头" ToolTip="箭头"
+                          Click="OnToolSelected" Tag="Arrow" Margin="2"/>
+            <ToggleButton x:Name="BtnText" Content="文字" ToolTip="文字"
+                          Click="OnToolSelected" Tag="Text" Margin="2"/>
+            <ToggleButton x:Name="BtnMosaic" Content="马赛克" ToolTip="马赛克"
+                          Click="OnToolSelected" Tag="Mosaic" Margin="2"/>
+            <Separator/>
+            <Button x:Name="BtnUndo" Content="撤销" Click="OnUndo" Margin="2"/>
+            <Separator/>
+            <Button x:Name="BtnSave" Content="保存" Click="OnSave" Margin="2"/>
+            <Button x:Name="BtnCopy" Content="复制" Click="OnCopy" Margin="2"/>
+            <Button x:Name="BtnComplete" Content="完成" Click="OnComplete" Margin="2" FontWeight="Bold"/>
+            <Separator/>
+            <Button x:Name="BtnColor" Content="颜色" Click="OnColor" Margin="2"/>
+            <Label x:Name="LabelThickness" Content="粗细:" VerticalAlignment="Center"/>
+            <ComboBox x:Name="PenSizeCombo" SelectedIndex="1" Width="50">
+                <ComboBoxItem Content="1"/>
+                <ComboBoxItem Content="2"/>
+                <ComboBoxItem Content="3"/>
+                <ComboBoxItem Content="4"/>
+                <ComboBoxItem Content="5"/>
+            </ComboBox>
+        </ToolBar>
+
+        <!-- Image area -->
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto" Background="DimGray">
+            <Grid>
+                <Image x:Name="DisplayImage" Stretch="None" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                <Canvas x:Name="OverlayCanvas" Visibility="Hidden"/>
+            </Grid>
+        </ScrollViewer>
+
+        <!-- Status bar -->
+        <StatusBar Grid.Row="2">
+            <StatusBarItem x:Name="StatusItem" Content="就绪"/>
+        </StatusBar>
+    </Grid>
+</Window>
