@@ -216,32 +216,21 @@ private void OverlayCanvas_MouseMove(object sender, System.Windows.Input.MouseEv
     private UIElement CreateArrowElement(Point start, Point end, double thickness, System.Windows.Media.Color color)
     {
         var brush = new SolidColorBrush(color);
-        var canvas = new Canvas();
-        // Line
-        var line = new System.Windows.Shapes.Line
+        var geo = new StreamGeometry();
+        using (var ctx = geo.Open())
         {
-            X1 = start.X, Y1 = start.Y, X2 = end.X, Y2 = end.Y,
-            Stroke = brush, StrokeThickness = thickness
-        };
-        canvas.Children.Add(line);
-        // Arrowhead
-        double angle = Math.Atan2(end.Y - start.Y, end.X - start.X);
-        double arrowSize = 12;
-        var p1 = new Point(
-            end.X - arrowSize * Math.Cos(angle - 0.4),
-            end.Y - arrowSize * Math.Sin(angle - 0.4));
-        var p2 = new Point(
-            end.X - arrowSize * Math.Cos(angle + 0.4),
-            end.Y - arrowSize * Math.Sin(angle + 0.4));
-        var polygon = new Polygon
-        {
-            Points = new PointCollection { end, p1, p2 },
-            Fill = brush,
-            Stroke = brush,
-            StrokeThickness = 1
-        };
-        canvas.Children.Add(polygon);
-        return canvas;
+            ctx.BeginFigure(start, false, false);
+            ctx.LineTo(end, true, false);
+            double angle = Math.Atan2(end.Y - start.Y, end.X - start.X);
+            double arrowSize = 12 + thickness;
+            var p1 = new Point(end.X - arrowSize * Math.Cos(angle - 0.4), end.Y - arrowSize * Math.Sin(angle - 0.4));
+            var p2 = new Point(end.X - arrowSize * Math.Cos(angle + 0.4), end.Y - arrowSize * Math.Sin(angle + 0.4));
+            ctx.BeginFigure(end, true, true);
+            ctx.LineTo(p1, true, false);
+            ctx.LineTo(p2, true, false);
+        }
+        geo.Freeze();
+        return new System.Windows.Shapes.Path { Data = geo, Stroke = brush, StrokeThickness = thickness, Fill = brush };
     }
     private void AddTextShape(Point location)
     {
@@ -436,6 +425,25 @@ private void OverlayCanvas_MouseMove(object sender, System.Windows.Input.MouseEv
         StatusItem.Content = zh ? "就绪" : "Ready";
     }
 
+    private void ShowResultDialog(string title, string text)
+    {
+        var win = new System.Windows.Window
+        {
+            Title = title, Width = 600, Height = 400,
+            WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner,
+            Owner = this,
+            Content = new System.Windows.Controls.TextBox
+            {
+                Text = text, IsReadOnly = true,
+                TextWrapping = System.Windows.TextWrapping.Wrap,
+                VerticalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Auto,
+                Margin = new System.Windows.Thickness(10),
+                FontSize = 12
+            }
+        };
+        win.ShowDialog();
+    }
+
     protected override void OnClosed(EventArgs e)
     {
         _workingBitmap?.Dispose();
@@ -457,7 +465,7 @@ private void OverlayCanvas_MouseMove(object sender, System.Windows.Input.MouseEv
             var ocr = new Services.OcrService();
             var text = await ocr.RecognizeTextAsync(_workingBitmap, s.DeepSeekApiKey);
             StatusItem.Content = "OCR: " + (text.Length > 60 ? text[..60] + "..." : text);
-            System.Windows.MessageBox.Show(text, "OCR 识别结果");
+            ShowResultDialog("OCR 识别结果", text);
         }
         catch (Exception ex) { System.Windows.MessageBox.Show($"OCR 失败: {ex.Message}", "错误"); }
     }
@@ -480,7 +488,7 @@ private void OverlayCanvas_MouseMove(object sender, System.Windows.Input.MouseEv
             { System.Windows.MessageBox.Show(text == "" ? "无法识别文字" : text, "提示"); return; }
             var translated = await tms.TranslateAsync(text, s.DeepSeekApiKey, null);
             StatusItem.Content = "翻译: " + (translated.Length > 60 ? translated[..60] + "..." : translated);
-            System.Windows.MessageBox.Show($"原文:\n{text}\n\n翻译:\n{translated}", "翻译结果");
+            ShowResultDialog("翻译结果", $"原文:\n{text}\n\n翻译:\n{translated}");
         }
         catch (Exception ex) { System.Windows.MessageBox.Show($"翻译失败: {ex.Message}", "错误"); }
     }
