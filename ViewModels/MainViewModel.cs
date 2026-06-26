@@ -159,17 +159,32 @@ public partial class MainViewModel : ObservableObject
 
     public void DoQuickSave()
     {
+        var settings = _settingsService.Settings;
+        if (settings.CaptureMode == CaptureMode.Separate)
+        {
+            int count = _captureService.ScreenCount;
+            for (int i = 0; i < count; i++)
+            {
+                using var img = _captureService.CaptureScreen(i);
+                string suffix = count > 1 ? GetScreenSuffix(i) : ".full";
+                _fileStorageService.SaveImage(img, settings, suffix);
+                CaptureCount++;
+            }
+        }
+        else
+        {
         try
         {
             using var img = _captureService.CaptureFullScreen();
             _fileStorageService.SaveImage(img, _settingsService.Settings, ".full");
             CaptureCount++;
-            StatusText = "已保存全屏截图";
         }
         catch (Exception ex)
         {
             System.Diagnostics.Trace.WriteLine($"Quick save error: {ex.Message}");
         }
+        }
+        StatusText = $"已保存, 共 {CaptureCount} 张";
     }
 
     public Action? ToggleWindowAction { get; set; }

@@ -21,7 +21,7 @@ public partial class MagnifierControl : System.Windows.Controls.UserControl
         _screenShot = screenshot;
     }
 
-    public void Update(int mouseX, int mouseY, int virtualScreenLeft, int virtualScreenTop)
+    public void Update(int mouseX, int mouseY, int virtualScreenLeft, int virtualScreenTop, double scaleX = 1.0, double scaleY = 1.0)
     {
         if (_screenShot == null) return;
 
