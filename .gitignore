@@ -50,3 +50,7 @@ Desktop.ini
 
 ## GitHub
 *.gh
+
+publish/
+*.publish/
+bin/Release/
