@@ -456,14 +456,14 @@ private void OverlayCanvas_MouseMove(object sender, System.Windows.Input.MouseEv
         var s = _settingsService.Settings;
         if (string.IsNullOrEmpty(s.TencentSecretId) || string.IsNullOrEmpty(s.TencentSecretKey))
         {
-            System.Windows.MessageBox.Show("请先在主窗口设置中配置DeepSeek API Key（获取: https://platform.deepseek.com）", "OCR 配置");
+            System.Windows.MessageBox.Show("请先在主窗口设置中配置腾讯云 SecretId 和 SecretKey（获取: https://console.cloud.tencent.com/cam/capi）", "OCR 配置");
             return;
         }
         StatusItem.Content = "OCR 识别中...";
         try
         {
             var ocr = new Services.OcrService();
-            var text = await ocr.RecognizeTextAsync(_workingBitmap, s.TencentSecretId);
+            var text = await ocr.RecognizeTextAsync(_workingBitmap, s.TencentSecretId, s.TencentSecretKey);
             StatusItem.Content = "OCR: " + (text.Length > 60 ? text[..60] + "..." : text);
             ShowResultDialog("OCR 识别结果", text);
         }
@@ -475,7 +475,7 @@ private void OverlayCanvas_MouseMove(object sender, System.Windows.Input.MouseEv
         var s = _settingsService.Settings;
         if (string.IsNullOrEmpty(s.TencentSecretId) || string.IsNullOrEmpty(s.TencentSecretKey))
         {
-            System.Windows.MessageBox.Show("请先配置 DeepSeek API Key", "翻译配置");
+            System.Windows.MessageBox.Show("请先配置腾讯云 SecretId 和 SecretKey", "翻译配置");
             return;
         }
         StatusItem.Content = "翻译中...";
@@ -483,7 +483,7 @@ private void OverlayCanvas_MouseMove(object sender, System.Windows.Input.MouseEv
         {
             var ocr = new Services.OcrService();
             var tms = new Services.TranslationService();
-            var text = await ocr.RecognizeTextAsync(_workingBitmap, s.TencentSecretId);
+            var text = await ocr.RecognizeTextAsync(_workingBitmap, s.TencentSecretId, s.TencentSecretKey);
             if (string.IsNullOrEmpty(text) || text.Contains("请先"))
             { System.Windows.MessageBox.Show(text == "" ? "无法识别文字" : text, "提示"); return; }
             var translated = await tms.TranslateAsync(text, s.TencentSecretId, s.TencentSecretKey);
