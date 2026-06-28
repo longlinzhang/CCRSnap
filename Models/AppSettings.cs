@@ -70,5 +70,6 @@ public class AppSettings
 
     // Language
     public string Language { get; set; } = "zh-CN";
-    public string? DeepSeekApiKey { get; set; }
+    public string? TencentSecretId { get; set; }
+    public string? TencentSecretKey { get; set; }
 }

@@ -454,7 +454,7 @@ private void OverlayCanvas_MouseMove(object sender, System.Windows.Input.MouseEv
     private async void OnOCR(object sender, RoutedEventArgs e)
     {
         var s = _settingsService.Settings;
-        if (string.IsNullOrEmpty(s.DeepSeekApiKey))
+        if (string.IsNullOrEmpty(s.TencentSecretId) || string.IsNullOrEmpty(s.TencentSecretKey))
         {
             System.Windows.MessageBox.Show("请先在主窗口设置中配置DeepSeek API Key（获取: https://platform.deepseek.com）", "OCR 配置");
             return;
@@ -463,7 +463,7 @@ private void OverlayCanvas_MouseMove(object sender, System.Windows.Input.MouseEv
         try
         {
             var ocr = new Services.OcrService();
-            var text = await ocr.RecognizeTextAsync(_workingBitmap, s.DeepSeekApiKey);
+            var text = await ocr.RecognizeTextAsync(_workingBitmap, s.TencentSecretId);
             StatusItem.Content = "OCR: " + (text.Length > 60 ? text[..60] + "..." : text);
             ShowResultDialog("OCR 识别结果", text);
         }
@@ -473,7 +473,7 @@ private void OverlayCanvas_MouseMove(object sender, System.Windows.Input.MouseEv
     private async void OnTranslate(object sender, RoutedEventArgs e)
     {
         var s = _settingsService.Settings;
-        if (string.IsNullOrEmpty(s.DeepSeekApiKey))
+        if (string.IsNullOrEmpty(s.TencentSecretId) || string.IsNullOrEmpty(s.TencentSecretKey))
         {
             System.Windows.MessageBox.Show("请先配置 DeepSeek API Key", "翻译配置");
             return;
@@ -483,10 +483,10 @@ private void OverlayCanvas_MouseMove(object sender, System.Windows.Input.MouseEv
         {
             var ocr = new Services.OcrService();
             var tms = new Services.TranslationService();
-            var text = await ocr.RecognizeTextAsync(_workingBitmap, s.DeepSeekApiKey);
+            var text = await ocr.RecognizeTextAsync(_workingBitmap, s.TencentSecretId);
             if (string.IsNullOrEmpty(text) || text.Contains("请先"))
             { System.Windows.MessageBox.Show(text == "" ? "无法识别文字" : text, "提示"); return; }
-            var translated = await tms.TranslateAsync(text, s.DeepSeekApiKey, null);
+            var translated = await tms.TranslateAsync(text, s.TencentSecretId, s.TencentSecretKey);
             StatusItem.Content = "翻译: " + (translated.Length > 60 ? translated[..60] + "..." : translated);
             ShowResultDialog("翻译结果", $"原文:\n{text}\n\n翻译:\n{translated}");
         }
