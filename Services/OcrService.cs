@@ -27,11 +27,11 @@ public class OcrService : IOcrService
         var b64 = Convert.ToBase64String(ms.ToArray());
 
         var payload = JsonSerializer.Serialize(new { ImageBase64 = b64 });
-        var (auth, ts) = Tc3Helper.Sign(secretId, secretKey, "ocr", "RecognizeGeneralOCR", "ap-guangzhou", payload);
+        var (auth, ts) = Tc3Helper.Sign(secretId, secretKey, "ocr", "GeneralBasicOCR", "ap-guangzhou", payload);
 
         using var req = new HttpRequestMessage(HttpMethod.Post, "https://ocr.tencentcloudapi.com");
         req.Headers.TryAddWithoutValidation("Authorization", auth);
-        req.Headers.TryAddWithoutValidation("X-TC-Action", "RecognizeGeneralOCR");
+        req.Headers.TryAddWithoutValidation("X-TC-Action", "GeneralBasicOCR");
         req.Headers.TryAddWithoutValidation("X-TC-Timestamp", ts.ToString());
         req.Headers.TryAddWithoutValidation("X-TC-Version", "2018-11-19");
         req.Headers.TryAddWithoutValidation("X-TC-Region", "ap-guangzhou");
