@@ -486,7 +486,10 @@ private void OverlayCanvas_MouseMove(object sender, System.Windows.Input.MouseEv
             var text = await ocr.RecognizeTextAsync(_workingBitmap, s.TencentSecretId, s.TencentSecretKey);
             if (string.IsNullOrEmpty(text) || text.Contains("请先"))
             { System.Windows.MessageBox.Show(text == "" ? "无法识别文字" : text, "提示"); return; }
-            var translated = await tms.TranslateAsync(text, s.TencentSecretId, s.TencentSecretKey);
+            // Auto-detect language direction
+            bool hasChinese = text.Any(c => c >= 0x4E00 && c <= 0x9FFF);
+            string targetLang = hasChinese ? "en" : "zh";
+            var translated = await tms.TranslateAsync(text, s.TencentSecretId, s.TencentSecretKey, "auto", targetLang);
             StatusItem.Content = "翻译: " + (translated.Length > 60 ? translated[..60] + "..." : translated);
             ShowResultDialog("翻译结果", $"原文:\n{text}\n\n翻译:\n{translated}");
         }
