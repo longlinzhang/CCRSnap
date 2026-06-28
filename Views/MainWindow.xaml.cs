@@ -60,6 +60,12 @@ public partial class MainWindow : Window
         TbxPrefix.Text = s.FilePrefix;
         TbxExtName.Text = s.CustomExtension;
         TbxWebhook.Text = s.WebhookUrl;
+        TbxSecretId.Text = s.TencentSecretId ?? "";
+        TbxSecretKey.Text = s.TencentSecretKey ?? "";
+        CboOcrApi.Items.Clear();
+        foreach (var item in new[] { "通用文字识别", "高精度版", "手写体识别", "表格识别V1", "表格识别V2", "二维码识别", "图像矫正" })
+            CboOcrApi.Items.Add(item);
+        CboOcrApi.SelectedIndex = (int)s.SelectedOcrApi;
         CbxAutoDelete.IsChecked = s.AutoDelete;
         CbxHide.IsChecked = s.HideSaveFolder;
         CbxLogin.IsChecked = s.StartAtLogin;
@@ -351,6 +357,7 @@ public partial class MainWindow : Window
             GbxDetectSet.Header = zh ? "差异检测设置" : "Change Detection";
             GbxScreenIdx.Header = zh ? "检测屏幕" : "Monitor";
             GbxFixKey.Header = zh ? "修复热键" : "HotKeys";
+            GbxOcrConfig.Header = zh ? "OCR/翻译配置" : "OCR/Translation Config";
             LabelSavePath.Content = zh ? "保存路径:" : "Save Path:";
             BtnBrowse.Content = zh ? "浏览" : "Browse";
             LabelExtName.Content = zh ? "文件后缀:" : "Suffix:";

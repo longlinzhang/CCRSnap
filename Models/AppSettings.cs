@@ -25,6 +25,17 @@ public enum ImageFormatType
     Bmp
 }
 
+public enum OcrApiType
+{
+    GeneralBasic = 0,       // 通用文字识别（免费）
+    GeneralAccurate = 1,    // 通用文字识别高精度版
+    GeneralHandwriting = 2, // 通用手写体识别
+    Table = 3,              // 表格识别V1
+    TableV2 = 4,            // 表格识别V2
+    Qrcode = 5,             // 二维码和条形码识别
+    ImageRectify = 6        // 图像切边矫正
+}
+
 public class AppSettings
 {
     // Save path
@@ -72,4 +83,5 @@ public class AppSettings
     public string Language { get; set; } = "zh-CN";
     public string? TencentSecretId { get; set; }
     public string? TencentSecretKey { get; set; }
+    public OcrApiType SelectedOcrApi { get; set; } = OcrApiType.GeneralBasic;
 }

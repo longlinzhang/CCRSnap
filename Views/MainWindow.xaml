@@ -214,6 +214,27 @@
                         </TextBlock>
                     </StackPanel>
                 </GroupBox>
+                <GroupBox Grid.Row="3" Grid.Column="1" x:Name="GbxOcrConfig" Header="OCR/翻译配置">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+                            <Label Content="SecretId:" FontWeight="Normal" Width="65"/>
+                            <TextBox x:Name="TbxSecretId" Width="200"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal">
+                            <Label Content="SecretKey:" FontWeight="Normal" Width="65"/>
+                            <TextBox x:Name="TbxSecretKey" Width="200"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Orientation="Horizontal">
+                            <Label Content="OCR模式:" FontWeight="Normal" Width="65"/>
+                            <ComboBox x:Name="CboOcrApi" Width="200"/>
+                        </StackPanel>
+                    </Grid>
+                </GroupBox>
             </Grid>
         </ScrollViewer>
 
