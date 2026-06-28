@@ -44,10 +44,16 @@ public class OcrService : IOcrService
         if (doc.RootElement.TryGetProperty("Response", out var r))
         {
             if (r.TryGetProperty("Error", out var e))
-                return $"API Error: {e.GetProperty("Message").GetString()}";
+            {
+                var code = e.GetProperty("Code").GetString();
+                var msg = e.GetProperty("Message").GetString();
+                if (code == "FailedOperation.UnOpenError")
+                    return "OCR 服务未开通，请前往 https://console.cloud.tencent.com/ocr/overview 开通后使用（免费版每月1000次）";
+                return $"API Error ({code}): {msg}";
+            }
             if (r.TryGetProperty("TextDetections", out var dets))
             {
-                var sb = new System.Text.StringBuilder();
+                var sb = new StringBuilder();
                 foreach (var item in dets.EnumerateArray())
                     sb.AppendLine(item.GetProperty("DetectedText").GetString());
                 return sb.ToString().TrimEnd();

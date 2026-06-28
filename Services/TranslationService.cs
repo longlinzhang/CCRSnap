@@ -39,8 +39,14 @@ public class TranslationService : ITranslationService
 
         if (doc.RootElement.TryGetProperty("Response", out var r))
         {
-            if (r.TryGetProperty("Error", out var e))
-                return $"API Error: {e.GetProperty("Message").GetString()}";
+                        if (r.TryGetProperty("Error", out var e))
+            {
+                var code = e.GetProperty("Code").GetString();
+                var msg = e.GetProperty("Message").GetString();
+                if (code == "FailedOperation.UserNotRegistered" || code == "FailedOperation.UnOpenError")
+                    return "机器翻译服务未开通，请前往 https://console.cloud.tencent.com/tmt 开通后使用（免费版每月500万字符）";
+                return $"API Error ({code}): {msg}";
+            }
             return r.GetProperty("TargetText").GetString() ?? "";
         }
         return "翻译失败";
