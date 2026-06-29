@@ -71,6 +71,7 @@ public partial class MainWindow : Window
         CbxLogin.IsChecked = s.StartAtLogin;
         CbxAutoStart.IsChecked = s.AutoStart;
         CbxScreenshot.IsChecked = s.ScreenshotEnabled;
+        CbxAutoCleanMem.IsChecked = s.AutoCleanMemory;
         CbxDetect.IsChecked = s.DetectChange;
         CbxPushWecom.IsChecked = s.PushToWeCom;
         SetScheduleMode(s.ScheduleMode);
@@ -210,6 +211,7 @@ public partial class MainWindow : Window
         s.StartAtLogin = CbxLogin.IsChecked == true;
         s.AutoStart = CbxAutoStart.IsChecked == true;
         s.ScreenshotEnabled = CbxScreenshot.IsChecked == true;
+        s.AutoCleanMemory = CbxAutoCleanMem.IsChecked == true;
         s.DetectChange = CbxDetect.IsChecked == true;
         s.PushToWeCom = CbxPushWecom.IsChecked == true;
         s.ScheduleMode = GetSelectedScheduleMode();
@@ -243,6 +245,12 @@ public partial class MainWindow : Window
     {
         _vm.StopScheduling();
         UpdateRunningState();
+    }
+
+    private void BtnCleanMem_Click(object sender, RoutedEventArgs e)
+    {
+        _vm.CleanMemory();
+        StatusLeft.Content = "内存已清理";
     }
 
     private void BtnSave_Click(object sender, RoutedEventArgs e)
@@ -335,6 +343,8 @@ public partial class MainWindow : Window
             BtnStop.Content = zh ? "停止" : "Stop";
             BtnSave.Content = zh ? "保存设置" : "Save Settings";
             BtnFixHK.Content = zh ? "修复热键" : "Fix HotKeys";
+            BtnCleanMem.Content = zh ? "清理内存" : "Clean Memory";
+            CbxAutoCleanMem.Content = zh ? "定时清理内存" : "Auto Clean";
             RbtnNow.Content = zh ? "立即开始" : "Start Now";
             RbtnTime.Content = zh ? "指定时间" : "Scheduled Time";
             RbtnHourly.Content = zh ? "每小时" : "Hourly";

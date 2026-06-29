@@ -150,6 +150,11 @@ public partial class MainViewModel : ObservableObject
                     _ = _weComPushService?.PushImageAsync(img, settings.WebhookUrl);
             }
             StatusText = $"已截图: {CaptureCount} 张";
+        if (settings.AutoCleanMemory)
+        {
+            int delaySec = Math.Min(settings.IntervalSeconds * 500, 10000);
+            System.Threading.ThreadPool.QueueUserWorkItem(_ => { System.Threading.Thread.Sleep(delaySec); CleanMemory(); });
+        }
         }
         catch (Exception ex)
         {
@@ -199,6 +204,13 @@ public partial class MainViewModel : ObservableObject
     public void ToggleWindowVisibility()
     {
         ToggleWindowAction?.Invoke();
+    }
+
+    public void CleanMemory()
+    {
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        try { Native.NativeMethods.EmptyWorkingSet(System.Diagnostics.Process.GetCurrentProcess().Handle); } catch { }
     }
 
     private static string GetScreenSuffix(int index) => index switch

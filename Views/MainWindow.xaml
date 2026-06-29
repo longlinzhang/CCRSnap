@@ -51,6 +51,8 @@
                         Width="80" Height="32" IsEnabled="False" Background="IndianRed" Foreground="Black"/>
                 <Button x:Name="BtnSave" Content="保存设置" Click="BtnSave_Click"
                         Width="90" Height="32"/>
+                <Button x:Name="BtnCleanMem" Content="清理内存" Click="BtnCleanMem_Click"
+                        Width="80" Height="32" Margin="4"/>
                 <Button x:Name="BtnFixHK" Content="修复热键" Click="BtnFixHK_Click"
                         Width="90" Height="32"/>
             </StackPanel>
@@ -108,6 +110,7 @@
                 <GroupBox Grid.Row="2" Grid.Column="0" x:Name="GbxFunctions" Header="功能选项">
                     <StackPanel>
                         <CheckBox x:Name="CbxScreenshot" Content="启用截图" IsChecked="True"/>
+                        <CheckBox x:Name="CbxAutoCleanMem" Content="定时清理内存"/>
                         <CheckBox x:Name="CbxAutoDelete" Content="自动删除旧截图" IsChecked="True"/>
                         <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
                             <Label x:Name="LabelDays" Content="保留天数:" FontWeight="Normal"/>

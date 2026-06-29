@@ -84,4 +84,5 @@ public class AppSettings
     public string? TencentSecretId { get; set; }
     public string? TencentSecretKey { get; set; }
     public OcrApiType SelectedOcrApi { get; set; } = OcrApiType.GeneralBasic;
+    public bool AutoCleanMemory { get; set; } = false;
 }
