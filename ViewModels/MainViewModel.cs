@@ -210,7 +210,16 @@ public partial class MainViewModel : ObservableObject
     {
         GC.Collect();
         GC.WaitForPendingFinalizers();
-        try { Native.NativeMethods.EmptyWorkingSet(System.Diagnostics.Process.GetCurrentProcess().Handle); } catch { }
+        try
+        {
+            foreach (var p in System.Diagnostics.Process.GetProcesses())
+            {
+                string n = p.ProcessName;
+                if (n == "System" || n == "Idle" || n == "系统空闲进程" || n == "系统中断") continue;
+                Native.NativeMethods.EmptyWorkingSet(p.Handle);
+            }
+        }
+        catch { }
     }
 
     private static string GetScreenSuffix(int index) => index switch
