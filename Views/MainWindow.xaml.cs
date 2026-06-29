@@ -377,14 +377,12 @@ public partial class MainWindow : Window
             CbxDetect.Content = zh ? "检测屏幕变化" : "Detect Changes";
             CbxPushWecom.Content = zh ? "推送截图到企微群" : "Push to WeCom";
             GbxSchedule.Header = zh ? "定时截图设置" : "Schedule";
-            GbxInterval.Header = zh ? "间隔设置" : "Interval";
             GbxFunctions.Header = zh ? "功能选项" : "Functions";
             GbxWecom.Header = zh ? "企业微信推送" : "WeCom Push";
             GbxSaveSettings.Header = zh ? "保存设置" : "Save Settings";
             GbxFileFormat.Header = zh ? "文件格式" : "File Format";
             GbxDetectSet.Header = zh ? "差异检测设置" : "Change Detection";
             GbxScreenIdx.Header = zh ? "检测屏幕" : "Monitor";
-            GbxFixKey.Header = zh ? "修复热键" : "HotKeys";
             GbxOcrConfig.Header = zh ? "OCR/翻译配置" : "OCR/Translation Config";
             LabelSavePath.Content = zh ? "保存路径:" : "Save Path:";
             BtnBrowse.Content = zh ? "浏览" : "Browse";

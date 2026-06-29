@@ -28,7 +28,6 @@ public partial class EditorWindow : Window
     private bool _isDrawing;
     private UIElement? _previewShape;
     private readonly Stack<List<UIElement>> _undoStack = new();
-    private bool _modified;
     public EditorWindow(Bitmap capturedImage, ISettingsService settingsService,
         IFileStorageService fileStorageService, IWeComPushService? weComPushService = null)
     {
@@ -174,7 +173,6 @@ private void OverlayCanvas_MouseMove(object sender, System.Windows.Input.MouseEv
         {
             SaveUndoState();
             OverlayCanvas.Children.Add(finalShape);
-            _modified = true;
         }
     }
     #endregion
@@ -247,7 +245,6 @@ private void OverlayCanvas_MouseMove(object sender, System.Windows.Input.MouseEv
         Canvas.SetLeft(tb, location.X);
         Canvas.SetTop(tb, location.Y);
         OverlayCanvas.Children.Add(tb);
-        _modified = true;
     }
     private static Rect GetRect(Point p1, Point p2)
     {
@@ -280,7 +277,6 @@ private void OverlayCanvas_MouseMove(object sender, System.Windows.Input.MouseEv
             }
         }
         UpdateImageDisplay();
-        _modified = true;
     }
     private static System.Drawing.Color GetAverageColor(Bitmap bmp, int x, int y, int w, int h)
     {

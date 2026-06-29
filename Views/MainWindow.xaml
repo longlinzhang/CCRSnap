@@ -44,19 +44,19 @@
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Orientation="Horizontal">
                 <Button x:Name="BtnCapture" Content="手动截图 (Alt+A)" Click="BtnCapture_Click"
-                        Width="140" Height="32" FontWeight="Bold" Background="DodgerBlue" Foreground="Black"/>
+                        Width="110" Height="32" FontWeight="Bold" Background="DodgerBlue" Foreground="Black"/>
                 <Button x:Name="BtnStart" Content="开始" Click="BtnStart_Click"
-                        Width="80" Height="32" Foreground="Black" Background="ForestGreen"/>
+                        Width="65" Height="32" Foreground="Black" Background="ForestGreen"/>
                 <Button x:Name="BtnStop" Content="停止" Click="BtnStop_Click"
-                        Width="80" Height="32" IsEnabled="False" Background="IndianRed" Foreground="Black"/>
+                        Width="65" Height="32" IsEnabled="False" Background="IndianRed" Foreground="Black"/>
                 <Button x:Name="BtnSave" Content="保存设置" Click="BtnSave_Click"
-                        Width="90" Height="32"/>
+                        Width="75" Height="32"/>
                 <Button x:Name="BtnCleanMem" Content="清理内存" Click="BtnCleanMem_Click"
                         Width="80" Height="32" Margin="4"/>
                 <Button x:Name="BtnFormula" Content="公式计算" Click="BtnFormula_Click"
-                        Width="90" Height="32"/>
+                        Width="75" Height="32"/>
                 <Button x:Name="BtnFixHK" Content="修复热键" Click="BtnFixHK_Click"
-                        Width="90" Height="32"/>
+                        Width="75" Height="32"/>
             </StackPanel>
             <Image Grid.Column="1" x:Name="LogoImage" Source="/CCRSnap;component/Resources/CNBM-TCDRI.png"
                    Width="180" Height="30" Margin="4,0" Stretch="Uniform"
@@ -86,6 +86,8 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <RadioButton Grid.Row="0" x:Name="RbtnNow" Content="立即开始" IsChecked="True"
                                      GroupName="Schedule" Checked="Schedule_Changed"/>
@@ -99,17 +101,14 @@
                                      GroupName="Schedule" Checked="Schedule_Changed"/>
                         <RadioButton Grid.Row="4" x:Name="RbtnHalfHour" Content="每半小时"
                                      GroupName="Schedule" Checked="Schedule_Changed"/>
+                        <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="0,6,0,0">
+                            <Label x:Name="LabelInterval" Content="间隔(秒):" FontWeight="Normal"/>
+                            <TextBox x:Name="TbxInterval" Text="30" Width="70"/>
+                        </StackPanel>
                     </Grid>
                 </GroupBox>
 
-                <GroupBox Grid.Row="1" Grid.Column="0" x:Name="GbxInterval" Header="间隔设置">
-                    <StackPanel Orientation="Horizontal">
-                        <Label x:Name="LabelInterval" Content="间隔(秒):" FontWeight="Normal"/>
-                        <TextBox x:Name="TbxInterval" Text="30" Width="70"/>
-                    </StackPanel>
-                </GroupBox>
-
-                <GroupBox Grid.Row="2" Grid.Column="0" x:Name="GbxFunctions" Header="功能选项">
+                <GroupBox Grid.Row="1" Grid.Column="0" x:Name="GbxFunctions" Header="功能选项">
                     <StackPanel>
                         <CheckBox x:Name="CbxScreenshot" Content="启用截图" IsChecked="True"/>
                         <CheckBox x:Name="CbxAutoCleanMem" Content="定时清理内存"/>
@@ -124,9 +123,11 @@
                     </StackPanel>
                 </GroupBox>
 
-                <GroupBox Grid.Row="3" Grid.Column="0" x:Name="GbxWecom" Header="企业微信推送">
+                <GroupBox Grid.Row="2" Grid.Column="0" x:Name="GbxWecom" Header="企业微信推送">
                     <Grid>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
@@ -135,6 +136,12 @@
                             <Label x:Name="LabelWebhook" Content="Webhook:" FontWeight="Normal"/>
                             <TextBox x:Name="TbxWebhook" Width="200"/>
                         </StackPanel>
+                        <StackPanel Grid.Row="2" Margin="4,8,4,4">
+                            <TextBlock x:Name="HotkeyHelpBlock" FontWeight="Normal" TextWrapping="Wrap">
+                                如果热键无效，点击"修复热键"重新注册快捷键。
+                                Alt+A = 手动截图, Ctrl+F12 = 显示/隐藏, Ctrl+` = 全屏保存
+                            </TextBlock>
+                        </StackPanel>
                     </Grid>
                 </GroupBox>
 
@@ -142,6 +149,8 @@
                 <GroupBox Grid.Row="0" Grid.Column="1" x:Name="GbxSaveSettings" Header="保存设置">
                     <Grid>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
@@ -190,6 +199,8 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <CheckBox Grid.Row="0" x:Name="CbxDetect" Content="检测屏幕变化" Checked="Detect_Changed"/>
                         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="20,0,0,0">
@@ -211,17 +222,12 @@
                     </Grid>
                 </GroupBox>
 
-                <GroupBox Grid.Row="2" Grid.Column="1" x:Name="GbxFixKey" Header="修复热键">
-                    <StackPanel>
-                        <TextBlock x:Name="HotkeyHelpBlock" Margin="4" FontWeight="Normal" TextWrapping="Wrap">
-                            如果热键无效，点击"修复热键"重新注册快捷键。
-                            Alt+A = 手动截图, Ctrl+F12 = 显示/隐藏, Ctrl+` = 全屏保存
-                        </TextBlock>
-                    </StackPanel>
-                </GroupBox>
-                <GroupBox Grid.Row="3" Grid.Column="1" x:Name="GbxOcrConfig" Header="OCR/翻译配置">
+                
+                <GroupBox Grid.Row="2" Grid.Column="1" x:Name="GbxOcrConfig" Header="OCR/翻译配置">
                     <Grid>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
