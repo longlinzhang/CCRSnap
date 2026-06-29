@@ -1,4 +1,5 @@
 using System.IO;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
@@ -254,6 +255,21 @@ public partial class MainWindow : Window
         StatusLeft.Content = "内存已清理";
     }
 
+    private void BtnFormula_Click(object sender, RoutedEventArgs e)
+    {
+        string exeDir = Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
+        string fmPath = Path.Combine(exeDir, "FormulaManager", "FormulaManager.exe");
+        if (File.Exists(fmPath))
+        {
+            try { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(fmPath) { UseShellExecute = true }); }
+            catch (Exception ex) { System.Windows.MessageBox.Show($"启动失败: {ex.Message}", "错误"); }
+        }
+        else
+        {
+            System.Windows.MessageBox.Show($"未找到 FormulaManager.exe\n预期路径: {fmPath}", "文件不存在");
+        }
+    }
+
     private void BtnSave_Click(object sender, RoutedEventArgs e)
     {
         CollectSettings();
@@ -345,6 +361,7 @@ public partial class MainWindow : Window
             BtnSave.Content = zh ? "保存设置" : "Save Settings";
             BtnFixHK.Content = zh ? "修复热键" : "Fix HotKeys";
             BtnCleanMem.Content = zh ? "清理内存" : "Clean Memory";
+            BtnFormula.Content = zh ? "公式计算" : "Formula Calc";
             CbxAutoCleanMem.Content = zh ? "定时清理内存" : "Auto Clean";
             RbtnNow.Content = zh ? "立即开始" : "Start Now";
             RbtnTime.Content = zh ? "指定时间" : "Scheduled Time";

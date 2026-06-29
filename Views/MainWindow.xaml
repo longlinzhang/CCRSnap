@@ -1,7 +1,7 @@
 <Window x:Class="CCRSnap.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="CCRSnap - 截图工具" Height="620" Width="720"
+        Title="CCRSnap - 截图工具" Height="620" Width="860"
         WindowStartupLocation="CenterScreen" Icon="/CCRSnap;component/TC.ico"
         ShowInTaskbar="False" WindowStyle="SingleBorderWindow"
         ResizeMode="CanResize">
@@ -53,6 +53,8 @@
                         Width="90" Height="32"/>
                 <Button x:Name="BtnCleanMem" Content="清理内存" Click="BtnCleanMem_Click"
                         Width="80" Height="32" Margin="4"/>
+                <Button x:Name="BtnFormula" Content="公式计算" Click="BtnFormula_Click"
+                        Width="90" Height="32"/>
                 <Button x:Name="BtnFixHK" Content="修复热键" Click="BtnFixHK_Click"
                         Width="90" Height="32"/>
             </StackPanel>
