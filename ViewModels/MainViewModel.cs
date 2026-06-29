@@ -210,16 +210,24 @@ public partial class MainViewModel : ObservableObject
     {
         GC.Collect();
         GC.WaitForPendingFinalizers();
-        try
+        foreach (var p in System.Diagnostics.Process.GetProcesses())
         {
-            foreach (var p in System.Diagnostics.Process.GetProcesses())
+            try
             {
-                string n = p.ProcessName;
-                if (n == "System" || n == "Idle" || n == "系统空闲进程" || n == "系统中断") continue;
-                Native.NativeMethods.EmptyWorkingSet(p.Handle);
+                string name = p.ProcessName;
+                if (name == "System" || name == "Idle" || name == "系统空闲进程" || name == "系统中断") continue;
+                System.IntPtr h = Native.NativeMethods.OpenProcess(
+                    Native.NativeMethods.PROCESS_SET_QUOTA | Native.NativeMethods.PROCESS_QUERY_INFORMATION,
+                    false, p.Id);
+                if (h != System.IntPtr.Zero)
+                {
+                    Native.NativeMethods.EmptyWorkingSet(h);
+                    Native.NativeMethods.CloseHandle(h);
+                }
             }
+            catch { }
+            finally { p.Dispose(); }
         }
-        catch { }
     }
 
     private static string GetScreenSuffix(int index) => index switch

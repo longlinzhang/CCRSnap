@@ -19,6 +19,14 @@ internal static class NativeMethods
     public static extern bool SetProcessDpiAwarenessContext(IntPtr dpiContext);
 
     public static readonly IntPtr DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2 = new(-4);
-    [DllImport("psapi.dll")]
-    public static extern bool EmptyWorkingSet(IntPtr hwProc);
+   [DllImport("psapi.dll")]
+   public static extern bool EmptyWorkingSet(IntPtr hwProc);
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern IntPtr OpenProcess(uint dwDesiredAccess, bool bInheritHandle, int dwProcessId);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern bool CloseHandle(IntPtr hObject);
+
+    public const uint PROCESS_SET_QUOTA = 0x0100;
+    public const uint PROCESS_QUERY_INFORMATION = 0x0400;
 }

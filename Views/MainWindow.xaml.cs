@@ -249,6 +249,7 @@ public partial class MainWindow : Window
 
     private void BtnCleanMem_Click(object sender, RoutedEventArgs e)
     {
+        StatusLeft.Content = "正在清理内存...";
         _vm.CleanMemory();
         StatusLeft.Content = "内存已清理";
     }
