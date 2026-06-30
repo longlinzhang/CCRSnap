@@ -112,6 +112,8 @@
                     <StackPanel>
                         <CheckBox x:Name="CbxScreenshot" Content="启用截图" IsChecked="True"/>
                         <CheckBox x:Name="CbxAutoCleanMem" Content="定时清理内存"/>
+                        <CheckBox x:Name="CbxStartMinimized" Content="启动时隐藏主窗口"/>
+                        <CheckBox x:Name="CbxHideTrayIcon" Content="隐藏托盘图标"/>
                         <CheckBox x:Name="CbxAutoDelete" Content="自动删除旧截图" IsChecked="True"/>
                         <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
                             <Label x:Name="LabelDays" Content="保留天数:" FontWeight="Normal"/>

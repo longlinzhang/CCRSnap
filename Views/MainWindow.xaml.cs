@@ -73,6 +73,8 @@ public partial class MainWindow : Window
         CbxAutoStart.IsChecked = s.AutoStart;
         CbxScreenshot.IsChecked = s.ScreenshotEnabled;
         CbxAutoCleanMem.IsChecked = s.AutoCleanMemory;
+        CbxStartMinimized.IsChecked = s.StartMinimized;
+        CbxHideTrayIcon.IsChecked = s.HideTrayIcon;
         CbxDetect.IsChecked = s.DetectChange;
         CbxPushWecom.IsChecked = s.PushToWeCom;
         SetScheduleMode(s.ScheduleMode);
@@ -363,6 +365,8 @@ public partial class MainWindow : Window
             BtnCleanMem.Content = zh ? "清理内存" : "Clean Memory";
             BtnFormula.Content = zh ? "公式计算" : "Formula Calc";
             CbxAutoCleanMem.Content = zh ? "定时清理内存" : "Auto Clean";
+            CbxStartMinimized.Content = zh ? "启动时隐藏主窗口" : "Hide on Startup";
+            CbxHideTrayIcon.Content = zh ? "隐藏托盘图标" : "Hide Tray Icon";
             RbtnNow.Content = zh ? "立即开始" : "Start Now";
             RbtnTime.Content = zh ? "指定时间" : "Scheduled Time";
             RbtnHourly.Content = zh ? "每小时" : "Hourly";
