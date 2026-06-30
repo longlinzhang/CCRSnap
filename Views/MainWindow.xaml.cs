@@ -93,6 +93,8 @@ public partial class MainWindow : Window
             }
         };
         if (s.AutoStart) { _vm.StartScheduling(); UpdateRunningState(); }
+        if (s.StartMinimized) { this.Hide(); }
+        if (s.HideTrayIcon && _trayIcon != null) _trayIcon.Visible = false;
     }
 
     private void SetupTrayIcon()
@@ -215,6 +217,8 @@ public partial class MainWindow : Window
         s.AutoStart = CbxAutoStart.IsChecked == true;
         s.ScreenshotEnabled = CbxScreenshot.IsChecked == true;
         s.AutoCleanMemory = CbxAutoCleanMem.IsChecked == true;
+        s.StartMinimized = CbxStartMinimized.IsChecked == true;
+        s.HideTrayIcon = CbxHideTrayIcon.IsChecked == true;
         s.DetectChange = CbxDetect.IsChecked == true;
         s.PushToWeCom = CbxPushWecom.IsChecked == true;
         s.ScheduleMode = GetSelectedScheduleMode();
